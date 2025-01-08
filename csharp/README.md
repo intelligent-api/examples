@@ -19,7 +19,7 @@
 
 ## Pre-requisites
 
-1. .net 8 installed
+1. .net 8 sdk (https://dotnet.microsoft.com/en-us/download/dotnet/8.0) installed
 
 ## Usage
 
