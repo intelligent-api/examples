@@ -19,7 +19,7 @@
 
 ## Pre-requisites
 
-1. Go installed and configured
+1. Go 1.23 (https://go.dev/doc/install) installed and configured
 
 ## Usage
 
@@ -27,5 +27,5 @@
 2. Run the project by executing the following command in the respective project folder
 
 ```shell
-go main.go
+go run main.go
 ```
