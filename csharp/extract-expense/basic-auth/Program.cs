@@ -4,7 +4,7 @@ var clientSecret = "[[client_secret]]";
 
 // create a base64 encoded api key
 var apiKeyText = $"{clientId}:{clientSecret}";
-var apiKey = System.Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(apiKeyText));
+var apiKey = Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(apiKeyText));
 
 // use the api key as the basic token
 var authorization = $"Basic {apiKey}";

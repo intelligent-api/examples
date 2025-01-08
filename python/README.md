@@ -1,4 +1,4 @@
-# cURL examples for api.intelligent-api.com
+# Python examples for api.intelligent-api.com
 
 | endpoint                                                          | example folder                   | required scopes                         |
 | ----------------------------------------------------------------- | -------------------------------- | --------------------------------------- |
@@ -19,9 +19,13 @@
 
 ## Pre-requisites
 
-1. curl installed in shell / terminal.
+1. .net 8 installed
 
 ## Usage
 
-1. Replace all the relevant variables in the chosen script i.e. find all the variables surrounded with `[[variable]]` and replace with a relevant value.
-2. Copy line by line into your terminal to execute.
+1. Replace all the relevant variables in the chosen c# project `Program.cs` file i.e. find all the variables surrounded with `[[variable]]` and replace with a relevant value.
+2. Run the project by executing the following command in the respective project folder
+
+```shell
+dotnet run
+```
