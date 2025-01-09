@@ -7,7 +7,7 @@ import java.nio.file.Files;
 
 public class TokenAuth {
         public static void main(String args[]) {
-                // basic configuration
+                // token configuration
                 String clientId = "[[client_id]]";
                 String clientSecret = "[[client_secret]]";
                 String scopes = "[[scopes]]";

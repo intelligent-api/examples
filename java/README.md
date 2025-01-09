@@ -23,7 +23,7 @@
 
 ## Usage
 
-1. Replace all the relevant variables in the chosen Java project `BasicAuth.java` or `TokenAuth.java` filed i.e. find all the variables surrounded with `[[variable]]` and replace with a relevant value.
+1. Replace all the relevant variables in the chosen Java project `BasicAuth.java` or `TokenAuth.java` files i.e. find all the variables surrounded with `[[variable]]` and replace with a relevant value.
 2. Run the project by executing the following command in the respective project folder
 
 ```shell
