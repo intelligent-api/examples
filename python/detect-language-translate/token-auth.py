@@ -2,7 +2,7 @@ import base64
 import http.client
 import json
 
-# basic configuration
+# token configuration
 client_id = "[[client_id]]"
 client_secret = "[[client_secret]]"
 scopes = "[[scopes]]"

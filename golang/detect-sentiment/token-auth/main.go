@@ -23,7 +23,7 @@ type TokenResponse struct {
 }
 
 func main() {
-	// basic configuration
+	// token configuration
 	clientId := "[[client_id]]"
 	clientSecret := "[[client_secret]]"
 	scopes := "[[scopes]]"
