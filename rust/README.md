@@ -19,13 +19,13 @@
 
 ## Pre-requisites
 
-1. .net 8 installed
+1. Rust and cargo (https://doc.rust-lang.org/cargo/getting-started/installation.html) installed
 
 ## Usage
 
-1. Replace all the relevant variables in the chosen c# project `Program.cs` file i.e. find all the variables surrounded with `[[variable]]` and replace with a relevant value.
+1. Replace all the relevant variables in the chosen Rust project `main.rs` file i.e. find all the variables surrounded with `[[variable]]` and replace with a relevant value.
 2. Run the project by executing the following command in the respective project folder
 
 ```shell
-dotnet run
+cargo run
 ```
