@@ -19,13 +19,17 @@
 
 ## Pre-requisites
 
-1. .net 8 installed
+1. Python 3 (https://www.python.org/downloads/) installed
 
 ## Usage
 
-1. Replace all the relevant variables in the chosen c# project `Program.cs` file i.e. find all the variables surrounded with `[[variable]]` and replace with a relevant value.
+1. Replace all the relevant variables in the chosen Python project `basic-auth.py` or `token-auth.py` files i.e. find all the variables surrounded with `[[variable]]` and replace with a relevant value.
 2. Run the project by executing the following command in the respective project folder
 
 ```shell
-dotnet run
+# for basic auth exmaple
+python3 basic-auth.py
+
+# for token auth exmaple
+python3 token-auth.py
 ```
