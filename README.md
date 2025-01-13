@@ -2,16 +2,16 @@
 
 ## Currently Available Language Examples
 
-| Language | Examples                                           | Notes                                                       |
-| -------- | -------------------------------------------------- | ----------------------------------------------------------- |
-| C#       | https://github.com/intelligent-api/examples/csharp | Implementation without addition of any nuget packages       |
-| cURL     | https://github.com/intelligent-api/examples/curl   |                                                             |
-| Go       | https://github.com/intelligent-api/examples/golang |                                                             |
-| Java     | https://github.com/intelligent-api/examples/java   | Implementation without addition of any dependencies         |
-| Node.js  | https://github.com/intelligent-api/examples/nodejs |                                                             |
-| Python   | https://github.com/intelligent-api/examples/python | Implementation using standard http.client                   |
-| Ruby     | https://github.com/intelligent-api/examples/ruby   |                                                             |
-| Rust     | https://github.com/intelligent-api/examples/rust   | Implementation using base64, reqwest, serde, tokio packages |
+| Language | Examples                                                     | Notes                                                       |
+| -------- | ------------------------------------------------------------ | ----------------------------------------------------------- |
+| C#       | https://github.com/intelligent-api/examples/tree/main/csharp | Implementation without addition of any nuget packages       |
+| cURL     | https://github.com/intelligent-api/examples/tree/main/curl   |                                                             |
+| Go       | https://github.com/intelligent-api/examples/tree/main/golang |                                                             |
+| Java     | https://github.com/intelligent-api/examples/tree/main/java   | Implementation without addition of any dependencies         |
+| Node.js  | https://github.com/intelligent-api/examples/tree/main/nodejs |                                                             |
+| Python   | https://github.com/intelligent-api/examples/tree/main/python | Implementation using standard http.client                   |
+| Ruby     | https://github.com/intelligent-api/examples/tree/main/ruby   |                                                             |
+| Rust     | https://github.com/intelligent-api/examples/tree/main/rust   | Implementation using base64, reqwest, serde, tokio packages |
 
 ## How to use
 
