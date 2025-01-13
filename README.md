@@ -5,7 +5,7 @@
 | Language | Examples                                                     | Notes                                                       |
 | -------- | ------------------------------------------------------------ | ----------------------------------------------------------- |
 | C#       | https://github.com/intelligent-api/examples/tree/main/csharp | Implementation without addition of any nuget packages       |
-| cURL     | https://github.com/intelligent-api/examples/tree/main/curl   |                                                             |
+| cURL     | https://github.com/intelligent-api/examples/tree/main/cURL   |                                                             |
 | Go       | https://github.com/intelligent-api/examples/tree/main/golang |                                                             |
 | Java     | https://github.com/intelligent-api/examples/tree/main/java   | Implementation without addition of any dependencies         |
 | Node.js  | https://github.com/intelligent-api/examples/tree/main/nodejs |                                                             |
