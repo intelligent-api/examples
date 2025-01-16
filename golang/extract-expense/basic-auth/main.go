@@ -32,20 +32,6 @@ func main() {
 	}
 	defer file.Close()
 
-	// Get the file's content type
-	buffer := make([]byte, 512) // Read the first 512 bytes
-	_, err = file.Read(buffer)
-	if err != nil && err != io.EOF {
-		fmt.Println("Error reading file:", err)
-		return
-	}
-
-	// Detect the content type
-	contentType := http.DetectContentType(buffer)
-
-	// Reset file read pointer to the beginning
-	file.Seek(0, io.SeekStart)
-
 	fileBytes, err := io.ReadAll(file)
 	if err != nil {
 		fmt.Println("Error reading file:", err)
@@ -60,7 +46,7 @@ func main() {
 		return
 	}
 
-	request.Header.Set("Content-Type", contentType)
+	request.Header.Set("Content-Type", "application/octet-stream")
 	request.Header.Set("Authorization", authorization)
 	request.Header.Set("User-Agent", userAgent)
 

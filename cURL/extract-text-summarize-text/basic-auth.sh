@@ -10,10 +10,9 @@ AUTHORIZATION="Basic $API_KEY"
 
 # populate endpoint parameters
 FULL_PATH_TO_FILE="[[filepath]]"
-CONTENT_TYPE="[[content_type]]"
 
 # invoke the API endpoint
 curl --location 'https://api.intelligent-api.com/v1/document/text/summarize' \
---header "Content-Type: $CONTENT_TYPE" \
+--header "Content-Type: application/octet-stream" \
 --header "Authorization: ${AUTHORIZATION}" \
 --data-binary "@$FULL_PATH_TO_FILE"
