@@ -9,9 +9,11 @@
 | https://api.intelligent-api.com/v1/document/identity       | extract-identity            | document.identity                    |
 | https://api.intelligent-api.com/v1/document/text           | extract-text                | document.text                        |
 | https://api.intelligent-api.com/v1/document/text/summarize | extract-text-summarize-text | document.text<br />text.summarize    |
+| https://api.intelligent-api.com/v1/image/list              | image-list                  | image.list                           |
 | https://api.intelligent-api.com/v1/pii/redact              | redact-pii                  | pii.redact                           |
 | https://api.intelligent-api.com/v1/scraper/markdown        | scraper-markdown            | scraper.markdown                     |
 | https://api.intelligent-api.com/v1/scraper/summarize       | scraper-summarize           | scraper.markdown<br />text.summarize |
+| https://api.intelligent-api.com/v1/speech/transcribe       | speech-transcribe           | speech.transcribe                    |
 | https://api.intelligent-api.com/v1/text/summarize          | summarize-text              | text.summarize                       |
 | https://api.intelligent-api.com/v1/language/translate      | translate                   | language.translate                   |
 
