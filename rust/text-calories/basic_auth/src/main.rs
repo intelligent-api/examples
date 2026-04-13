@@ -1,11 +1,7 @@
 use base64::{engine::general_purpose::STANDARD, Engine as _};
 use reqwest::header::{HeaderMap, HeaderValue, CONTENT_TYPE, AUTHORIZATION, USER_AGENT};
 use reqwest::Client;
-use reqwest::multipart::{Form, Part};
-use std::fs::File;
-use std::io::{Read};
-use tokio::fs::File;
-use tokio::io::AsyncReadExt;
+use serde::Serialize;
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
@@ -20,35 +16,31 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let authorization = format!("Basic {api_key}");
 
     // populate endpoint parameters
-    let file_path = "[[filepath]]";
+    let text: &str = "[[text_body]]";
     let user_agent = "Intelligent API Sample Rust Code";
 
-    let mut file = File::open(file_path).await?;
-    let mut file_data = Vec::new();
-    file.read_to_end(&mut file_data).await?;
+    #[derive(Serialize)]
+    struct PostBody {
+        text: String,
+    }
 
-    let file_name = Path::new(file_path)
-        .file_name()
-        .and_then(|n| n.to_str())
-        .unwrap_or("file")
-        .to_string();
-
-    // build multipart form
-    let part = Part::bytes(file_data)
-        .file_name(file_name)
-        .mime_str("application/octet-stream")?;
-
-    let form = Form::new().part("file", part);
+    let post_body = PostBody {
+        text: text.to_string(),
+    };
 
     // invoke the API endpoint
-    let url = "https://api.intelligent-api.com/v1/speech/transcribe";
+    let url = "https://api.intelligent-api.com/v1/text/calories";
+
+    let mut headers = HeaderMap::new();
+    headers.insert(CONTENT_TYPE, HeaderValue::from_static("application/json"));
+    headers.insert(AUTHORIZATION, HeaderValue::from_str(&authorization)?);
+    headers.insert(USER_AGENT, HeaderValue::from_str(&user_agent)?);
 
     let client = Client::new();
 
     let response = client.post(url)
-        .header(AUTHORIZATION, HeaderValue::from_str(&authorization)?)
-        .header(USER_AGENT, HeaderValue::from_str(&user_agent)?)
-        .multipart(form)
+        .headers(headers)
+        .json(&post_body)
         .send()
         .await?;
 
