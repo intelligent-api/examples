@@ -15,11 +15,15 @@
 | https://api.intelligent-api.com/v1/scraper/markdown        | scraper-markdown            | scraper.markdown                     |
 | https://api.intelligent-api.com/v1/scraper/summarize       | scraper-summarize           | scraper.markdown<br />text.summarize |
 | https://api.intelligent-api.com/v1/speech/transcribe       | speech-transcribe           | speech.transcribe                    |
+| https://api.intelligent-api.com/v1/speech/calories         | speech-calories             | speech.transcribe text.calories      |
+| https://api.intelligent-api.com/v1/speech/expenses         | speech-expenses             | speech.transcribe text.expenses      |
+| https://api.intelligent-api.com/v1/speech/todo             | speech-todo                 | speech.transcribe text.todos         |
 | https://api.intelligent-api.com/v1/text/summarize          | summarize-text              | text.summarize                       |
 | https://api.intelligent-api.com/v1/text/calories           | text-calories               | text.calories                        |
 | https://api.intelligent-api.com/v1/text/classify           | text-classify               | text.classify                        |
 | https://api.intelligent-api.com/v1/text/classify/multiple  | text-classify-multiple      | text.classify                        |
 | https://api.intelligent-api.com/v1/text/expenses           | text-expenses               | text.expenses                        |
+| https://api.intelligent-api.com/v1/text/todo               | text-todo                   | text.todos                           |
 | https://api.intelligent-api.com/v1/language/translate      | translate                   | language.translate                   |
 
 ## Pre-requisites
