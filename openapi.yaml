@@ -1,0 +1,3525 @@
+openapi: 3.0.2
+info:
+  title: Intelligent API
+  description: |-
+    The Intelligent API provides a unique set of endpoints that a caller can use to perform the following functions:
+
+    - Optical Character Recognition on images and documents, including specific functionality to cater for reading identity documentation and expense (receipts / invoices) information.
+    - Language functions such as detecting the language of a body of text or translating between 75 different languages
+    - The ability to identify and redact Personally Identifiable Information from bodies of text
+    - The ability to detect the overall sentiment and summarize bodies of text
+
+
+    Some useful links:
+    - <a href="https://github.com/intelligent-api/bruno" target="_blank">Bruno Collection</a>
+    - <a href="https://github.com/intelligent-api/postman" target="_blank">Postman Collection</a>
+    - <a href="https://github.com/intelligent-api/examples/" target="_blank">Code Examples</a>
+  termsOfService: https://intelligent-api.com/terms
+  contact:
+    email: support@intelligent-api.com
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  version: 1.0.0
+externalDocs:
+  description: Intelligent API that offers the consumer API endpoints to perform optical character recognition, language detection and translation, personal identifiable information (PII) detection and redaction as well as text sentiment detection and text summarization.
+  url: https://intelligent-api.com
+servers:
+  - url: https://api.intelligent-api.com/v1
+tags:
+  - name: Authentication
+    description: Authentication for the API
+    externalDocs:
+      description: Find out more
+      url: /docs/oauth-authentication
+  - name: Document-OCR
+    description: Document Optical Character Recognition (OCR)
+    externalDocs:
+      description: Find out more
+      url: /docs/playground#document-optical-character-recognition-ocr
+  - name: Language
+    description: Language
+    externalDocs:
+      description: Find out more
+      url: /docs/playground#language
+  - name: Media
+    description: Media
+    externalDocs:
+      description: Find out more
+      url: /docs/playground#media
+  - name: PII
+    description: Personally Identifiable Information (PII)
+    externalDocs:
+      description: Find out more
+      url: /docs/playground#personally-identifiable-information-pii
+  - name: Text
+    description: Text
+    externalDocs:
+      description: Find out more
+      url: /docs/playground#text
+  - name: Web-Scraper
+    description: Web Scraper
+    externalDocs:
+      description: Find out more
+      url: /docs/playground#scraper
+  - name: System
+    description: System functions
+
+paths:
+  /token:
+    post:
+      tags:
+        - Authentication
+      summary: Request a token
+      description: Request an access token when using OAuth Credentials authentication
+      operationId: token
+      requestBody:
+        description: TokenRequest
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TokenRequest"
+          application/xml:
+            schema:
+              $ref: "#/components/schemas/TokenRequest"
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: "#/components/schemas/TokenRequest"
+        required: true
+      responses:
+        "200":
+          description: Successful Operation
+          content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/TokenResponse"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TokenResponse"
+        "401":
+          description: Unauthorized
+          content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/UnauthorizedErrorResponse"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnauthorizedErrorResponse"
+        "500":
+          description: Internal Server Error
+          content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/InternalServerErrorResponse"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerErrorResponse"
+
+  /scopes:
+    get:
+      tags:
+        - Authentication
+      summary: Get the list of scopes
+      description: Get the list of scopes the API currently has available
+      operationId: scopes
+      responses:
+        "200":
+          description: Successful Operation
+          content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/ScopesResponse"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ScopesResponse"
+        "500":
+          description: Internal Server Error
+          content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/InternalServerErrorResponse"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerErrorResponse"
+
+  /document/expenses:
+    post:
+      tags:
+        - Document-OCR
+      summary: Extract expenses
+      description: This endpoint allows the caller to POST an image or document that contains expense data such as a receipt or invoice and the endpoint will return a summary of the details as well as a list of items and their prices.
+      operationId: extractexpenses
+      parameters:
+        - $ref: "#/components/parameters/AuthorizationHeader"
+        - $ref: "#/components/parameters/CorrelationHeader"
+        - $ref: "#/components/parameters/UserAgentHeader"
+      requestBody:
+        description: FileUpload
+        content:
+          application/octet-stream:
+            schema:
+              $ref: "#/components/schemas/FileUpload"
+          application/json:
+            schema:
+              $ref: "#/components/schemas/FileUpload"
+          application/xml:
+            schema:
+              $ref: "#/components/schemas/FileUpload"
+        required: true
+      responses:
+        "200":
+          description: Successful Operation
+          content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/ExtractExpenseResponse"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ExtractExpenseResponse"
+        "400":
+          description: Bad Request
+          content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/BadRequestErrorResponse"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequestErrorResponse"
+        "401":
+          description: Unauthorized
+          content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/UnauthorizedErrorResponse"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnauthorizedErrorResponse"
+        "402":
+          description: Payment Required
+          content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/PaymentRequiredErrorResponse"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PaymentRequiredErrorResponse"
+        "500":
+          description: Internal Server Error
+          content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/InternalServerErrorResponse"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerErrorResponse"
+
+  /document/identity:
+    post:
+      tags:
+        - Document-OCR
+      summary: Extract identity
+      description: This endpoint allows the caller to POST an image or document that contains identity data such as a passport or drivers license and the endpoint will return the identity details of the person.
+      operationId: extractidentity
+      parameters:
+        - $ref: "#/components/parameters/AuthorizationHeader"
+        - $ref: "#/components/parameters/CorrelationHeader"
+        - $ref: "#/components/parameters/UserAgentHeader"
+      requestBody:
+        description: FileUpload
+        content:
+          application/octet-stream:
+            schema:
+              $ref: "#/components/schemas/FileUpload"
+          application/json:
+            schema:
+              $ref: "#/components/schemas/FileUpload"
+          application/xml:
+            schema:
+              $ref: "#/components/schemas/FileUpload"
+        required: true
+      responses:
+        "200":
+          description: Successful Operation
+          content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/ExtractIdentityResponse"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ExtractIdentityResponse"
+        "400":
+          description: Bad Request
+          content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/BadRequestErrorResponse"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequestErrorResponse"
+        "401":
+          description: Unauthorized
+          content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/UnauthorizedErrorResponse"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnauthorizedErrorResponse"
+        "402":
+          description: Payment Required
+          content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/PaymentRequiredErrorResponse"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PaymentRequiredErrorResponse"
+        "500":
+          description: Internal Server Error
+          content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/InternalServerErrorResponse"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerErrorResponse"
+
+  /document/identity/fieldnames:
+    get:
+      tags:
+        - Document-OCR
+      summary: Extract identity field names
+      description: Returns the list of possible field names that are returned from the `/v1/document/identity` endpoint.
+      operationId: extractidentityfieldnames
+      parameters:
+        - $ref: "#/components/parameters/AuthorizationHeader"
+        - $ref: "#/components/parameters/CorrelationHeader"
+        - $ref: "#/components/parameters/UserAgentHeader"
+      responses:
+        "200":
+          description: Successful Operation
+          content:
+            application/xml:
+              schema:
+                description: The list of possible field names.
+                type: array
+                items:
+                  type: string
+                example:
+                  [
+                    "ADDRESS",
+                    "CITY_IN_ADDRESS",
+                    "CLASS",
+                    "COUNTY",
+                    "DATE_OF_BIRTH",
+                    "DATE_OF_ISSUE",
+                    "DOCUMENT_NUMBER",
+                    "ENDORSEMENTS",
+                    "EXPIRATION_DATE",
+                    "FIRST_NAME",
+                    "ID_TYPE",
+                    "LAST_NAME",
+                    "MIDDLE_NAME",
+                    "MRZ_CODE",
+                    "PLACE_OF_BIRTH",
+                    "RESTRICTIONS",
+                    "STATE_IN_ADDRESS",
+                    "STATE_NAME",
+                    "SUFFIX",
+                    "VETERAN",
+                    "ZIP_CODE_IN_ADDRESS",
+                  ]
+            application/json:
+              schema:
+                description: The list of possible field names.
+                type: array
+                items:
+                  type: string
+                example:
+                  [
+                    "ADDRESS",
+                    "CITY_IN_ADDRESS",
+                    "CLASS",
+                    "COUNTY",
+                    "DATE_OF_BIRTH",
+                    "DATE_OF_ISSUE",
+                    "DOCUMENT_NUMBER",
+                    "ENDORSEMENTS",
+                    "EXPIRATION_DATE",
+                    "FIRST_NAME",
+                    "ID_TYPE",
+                    "LAST_NAME",
+                    "MIDDLE_NAME",
+                    "MRZ_CODE",
+                    "PLACE_OF_BIRTH",
+                    "RESTRICTIONS",
+                    "STATE_IN_ADDRESS",
+                    "STATE_NAME",
+                    "SUFFIX",
+                    "VETERAN",
+                    "ZIP_CODE_IN_ADDRESS",
+                  ]
+        "400":
+          description: Bad Request
+          content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/BadRequestErrorResponse"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequestErrorResponse"
+        "401":
+          description: Unauthorized
+          content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/UnauthorizedErrorResponse"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnauthorizedErrorResponse"
+        "500":
+          description: Internal Server Error
+          content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/InternalServerErrorResponse"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerErrorResponse"
+
+  /document/text:
+    post:
+      tags:
+        - Document-OCR
+      summary: Extract text
+      description: This endpoint allows the caller to POST an image or document that contains any text and the endpoint will return the detected text.
+      operationId: extracttext
+      parameters:
+        - $ref: "#/components/parameters/AuthorizationHeader"
+        - $ref: "#/components/parameters/CorrelationHeader"
+        - $ref: "#/components/parameters/UserAgentHeader"
+      requestBody:
+        description: FileUpload
+        content:
+          application/octet-stream:
+            schema:
+              $ref: "#/components/schemas/FileUpload"
+          application/json:
+            schema:
+              $ref: "#/components/schemas/FileUpload"
+          application/xml:
+            schema:
+              $ref: "#/components/schemas/FileUpload"
+        required: true
+      responses:
+        "200":
+          description: Successful Operation
+          content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/ExtractTextResponse"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ExtractTextResponse"
+        "400":
+          description: Bad Request
+          content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/BadRequestErrorResponse"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequestErrorResponse"
+        "401":
+          description: Unauthorized
+          content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/UnauthorizedErrorResponse"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnauthorizedErrorResponse"
+        "402":
+          description: Payment Required
+          content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/PaymentRequiredErrorResponse"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PaymentRequiredErrorResponse"
+        "500":
+          description: Internal Server Error
+          content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/InternalServerErrorResponse"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerErrorResponse"
+
+  /document/text/summarize:
+    post:
+      tags:
+        - Document-OCR
+      summary: Extract text and summarize
+      description: This endpoint allows the caller to POST an image or document that contains any text and the endpoint will detect the text and then return a summary of the detected text.
+      operationId: extracttextsummarize
+      parameters:
+        - $ref: "#/components/parameters/AuthorizationHeader"
+        - $ref: "#/components/parameters/CorrelationHeader"
+        - $ref: "#/components/parameters/UserAgentHeader"
+      requestBody:
+        description: FileUpload
+        content:
+          application/octet-stream:
+            schema:
+              format: binary
+        required: true
+      responses:
+        "200":
+          description: Successful Operation
+          content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/ExtractTextSummarizeResponse"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ExtractTextSummarizeResponse"
+        "400":
+          description: Bad Request
+          content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/BadRequestErrorResponse"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequestErrorResponse"
+        "401":
+          description: Unauthorized
+          content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/UnauthorizedErrorResponse"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnauthorizedErrorResponse"
+        "402":
+          description: Payment Required
+          content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/PaymentRequiredErrorResponse"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PaymentRequiredErrorResponse"
+        "500":
+          description: Internal Server Error
+          content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/InternalServerErrorResponse"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerErrorResponse"
+
+  /image/list:
+    post:
+      tags:
+        - Media
+      summary: List items in image
+      description: This endpoint allows the caller to POST an image and the endpoint will return a list of items detected within the image.
+      operationId: listimageitems
+      parameters:
+        - $ref: "#/components/parameters/AuthorizationHeader"
+        - $ref: "#/components/parameters/CorrelationHeader"
+        - $ref: "#/components/parameters/UserAgentHeader"
+      requestBody:
+        description: FileUpload
+        content:
+          application/octet-stream:
+            schema:
+              $ref: "#/components/schemas/FileUpload"
+          application/json:
+            schema:
+              $ref: "#/components/schemas/FileUpload"
+          application/xml:
+            schema:
+              $ref: "#/components/schemas/FileUpload"
+        required: true
+      responses:
+        "200":
+          description: Successful Operation
+          content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/ImageListResponse"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ImageListResponse"
+        "400":
+          description: Bad Request
+          content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/BadRequestErrorResponse"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequestErrorResponse"
+        "401":
+          description: Unauthorized
+          content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/UnauthorizedErrorResponse"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnauthorizedErrorResponse"
+        "402":
+          description: Payment Required
+          content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/PaymentRequiredErrorResponse"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PaymentRequiredErrorResponse"
+        "500":
+          description: Internal Server Error
+          content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/InternalServerErrorResponse"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerErrorResponse"
+
+  /image/calories:
+    post:
+      tags:
+        - Media
+      summary: Image calorie count
+      description: This endpoint allows the caller to POST an image and the endpoint will return a list of food and drink items and their calorie and macro counts found in the image.
+      operationId: imagecalories
+      parameters:
+        - $ref: "#/components/parameters/AuthorizationHeader"
+        - $ref: "#/components/parameters/CorrelationHeader"
+        - $ref: "#/components/parameters/UserAgentHeader"
+      requestBody:
+        description: FileUpload
+        content:
+          application/octet-stream:
+            schema:
+              $ref: "#/components/schemas/FileUpload"
+          application/json:
+            schema:
+              $ref: "#/components/schemas/FileUpload"
+          application/xml:
+            schema:
+              $ref: "#/components/schemas/FileUpload"
+        required: true
+      responses:
+        "200":
+          description: Successful Operation
+          content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/CalorieCounterResponse"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CalorieCounterResponse"
+        "400":
+          description: Bad Request
+          content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/BadRequestErrorResponse"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequestErrorResponse"
+        "401":
+          description: Unauthorized
+          content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/UnauthorizedErrorResponse"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnauthorizedErrorResponse"
+        "402":
+          description: Payment Required
+          content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/PaymentRequiredErrorResponse"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PaymentRequiredErrorResponse"
+        "500":
+          description: Internal Server Error
+          content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/InternalServerErrorResponse"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerErrorResponse"
+
+  /text/calories:
+    post:
+      tags:
+        - Media
+      summary: Text calorie count
+      description: This endpoint allows the caller to POST a body of text containing food and drink items and the endpoint will return the list of items and their calorie and macro counts.
+      operationId: textcalories
+      parameters:
+        - $ref: "#/components/parameters/AuthorizationHeader"
+        - $ref: "#/components/parameters/CorrelationHeader"
+        - $ref: "#/components/parameters/UserAgentHeader"
+      requestBody:
+        description: The text to execute the request against.
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CalorieTextRequest"
+          application/xml:
+            schema:
+              $ref: "#/components/schemas/CalorieTextRequest"
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: "#/components/schemas/CalorieTextRequest"
+        required: true
+      responses:
+        "200":
+          description: Successful Operation
+          content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/CalorieCounterResponse"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CalorieCounterResponse"
+        "400":
+          description: Bad Request
+          content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/BadRequestErrorResponse"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequestErrorResponse"
+        "401":
+          description: Unauthorized
+          content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/UnauthorizedErrorResponse"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnauthorizedErrorResponse"
+        "402":
+          description: Payment Required
+          content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/PaymentRequiredErrorResponse"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PaymentRequiredErrorResponse"
+        "500":
+          description: Internal Server Error
+          content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/InternalServerErrorResponse"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerErrorResponse"
+
+  /language/translate/supportedlanguages:
+    get:
+      tags:
+        - Language
+      summary: Get the list of supported languages
+      description: Returns the list of supported languages for the language endpoints.
+      operationId: languagetranslatesupported
+      parameters:
+        - $ref: "#/components/parameters/AuthorizationHeader"
+        - $ref: "#/components/parameters/CorrelationHeader"
+        - $ref: "#/components/parameters/UserAgentHeader"
+      responses:
+        "200":
+          description: Successful Operation
+          content:
+            application/xml:
+              schema:
+                description: The list of supported languages.
+                type: array
+                items:
+                  $ref: "#/components/schemas/SupportedLanguageResponse"
+            application/json:
+              schema:
+                description: The list of supported languages.
+                type: array
+                items:
+                  $ref: "#/components/schemas/SupportedLanguageResponse"
+        "400":
+          description: Bad Request
+          content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/BadRequestErrorResponse"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequestErrorResponse"
+        "401":
+          description: Unauthorized
+          content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/UnauthorizedErrorResponse"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnauthorizedErrorResponse"
+        "500":
+          description: Internal Server Error
+          content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/InternalServerErrorResponse"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerErrorResponse"
+
+  /language/detect:
+    post:
+      tags:
+        - Language
+      summary: Detect the languages in the text.
+      description: This endpoint allows the caller to POST a body of text containing one or more languages and the endpoint will return the list of languages detected as well as the score indicating the prevalence of the language.
+      operationId: detectlanguage
+      parameters:
+        - $ref: "#/components/parameters/AuthorizationHeader"
+        - $ref: "#/components/parameters/CorrelationHeader"
+        - $ref: "#/components/parameters/UserAgentHeader"
+      requestBody:
+        description: The text to execute the request against.
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TextRequest"
+          application/xml:
+            schema:
+              $ref: "#/components/schemas/TextRequest"
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: "#/components/schemas/TextRequest"
+        required: true
+      responses:
+        "200":
+          description: Successful Operation
+          content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/LanguageDetectResponse"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LanguageDetectResponse"
+        "400":
+          description: Bad Request
+          content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/BadRequestErrorResponse"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequestErrorResponse"
+        "401":
+          description: Unauthorized
+          content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/UnauthorizedErrorResponse"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnauthorizedErrorResponse"
+        "402":
+          description: Payment Required
+          content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/PaymentRequiredErrorResponse"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PaymentRequiredErrorResponse"
+        "500":
+          description: Internal Server Error
+          content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/InternalServerErrorResponse"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerErrorResponse"
+
+  /language/translate:
+    post:
+      tags:
+        - Language
+      summary: Translate text from one language to another.
+      description: This endpoint allows the caller to POST a body of text specifying the source and target language and the endpoint will return the text in the target language requested.
+      operationId: languagetranslate
+      parameters:
+        - $ref: "#/components/parameters/AuthorizationHeader"
+        - $ref: "#/components/parameters/CorrelationHeader"
+        - $ref: "#/components/parameters/UserAgentHeader"
+      requestBody:
+        description: The text to execute the request against.
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TranslateRequest"
+          application/xml:
+            schema:
+              $ref: "#/components/schemas/TranslateRequest"
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: "#/components/schemas/TranslateRequest"
+        required: true
+      responses:
+        "200":
+          description: Successful Operation
+          content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/TranslateResponse"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TranslateResponse"
+        "400":
+          description: Bad Request
+          content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/BadRequestErrorResponse"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequestErrorResponse"
+        "401":
+          description: Unauthorized
+          content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/UnauthorizedErrorResponse"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnauthorizedErrorResponse"
+        "402":
+          description: Payment Required
+          content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/PaymentRequiredErrorResponse"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PaymentRequiredErrorResponse"
+        "500":
+          description: Internal Server Error
+          content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/InternalServerErrorResponse"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerErrorResponse"
+
+  /pii/supportedlanguages:
+    get:
+      tags:
+        - PII
+      summary: Get the list of supported languages
+      description: Returns the list of supported languages for the Personally Identifiable Information (PII) endpoints.
+      operationId: piisupported
+      parameters:
+        - $ref: "#/components/parameters/AuthorizationHeader"
+        - $ref: "#/components/parameters/CorrelationHeader"
+        - $ref: "#/components/parameters/UserAgentHeader"
+      responses:
+        "200":
+          description: Successful Operation
+          content:
+            application/xml:
+              schema:
+                description: The list of supported languages.
+                type: array
+                items:
+                  $ref: "#/components/schemas/SupportedLanguageResponse"
+            application/json:
+              schema:
+                description: The list of supported languages.
+                type: array
+                items:
+                  $ref: "#/components/schemas/SupportedLanguageResponse"
+        "400":
+          description: Bad Request
+          content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/BadRequestErrorResponse"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequestErrorResponse"
+        "401":
+          description: Unauthorized
+          content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/UnauthorizedErrorResponse"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnauthorizedErrorResponse"
+        "500":
+          description: Internal Server Error
+          content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/InternalServerErrorResponse"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerErrorResponse"
+
+  /pii/detect:
+    post:
+      tags:
+        - PII
+      summary: Detect Personally Identifiable Information (PII)
+      description: This endpoint allows the caller to POST a body of text and the source language and the endpoint will then detect any Personally Identifiable Information (PII) within the text and return the locations of any possible Personally Identifiable Information (PII).
+      operationId: piidetect
+      parameters:
+        - $ref: "#/components/parameters/AuthorizationHeader"
+        - $ref: "#/components/parameters/CorrelationHeader"
+        - $ref: "#/components/parameters/UserAgentHeader"
+      requestBody:
+        description: The text and language of the request.
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TextLanguageRequest"
+          application/xml:
+            schema:
+              $ref: "#/components/schemas/TextLanguageRequest"
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: "#/components/schemas/TextLanguageRequest"
+        required: true
+      responses:
+        "200":
+          description: Successful Operation
+          content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/DetectPiiResponse"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DetectPiiResponse"
+        "400":
+          description: Bad Request
+          content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/BadRequestErrorResponse"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequestErrorResponse"
+        "401":
+          description: Unauthorized
+          content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/UnauthorizedErrorResponse"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnauthorizedErrorResponse"
+        "402":
+          description: Payment Required
+          content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/PaymentRequiredErrorResponse"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PaymentRequiredErrorResponse"
+        "500":
+          description: Internal Server Error
+          content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/InternalServerErrorResponse"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerErrorResponse"
+
+  /pii/redact:
+    post:
+      tags:
+        - PII
+      summary: Redact Personally Identifiable Information (PII)
+      description: This endpoint allows the caller to POST a body of text and the source language and the endpoint will then detect any Personally Identifiable Information (PII) within the text and return the text with any Personally Identifiable Information (PII) redacted.
+      operationId: piiredact
+      parameters:
+        - $ref: "#/components/parameters/AuthorizationHeader"
+        - $ref: "#/components/parameters/CorrelationHeader"
+        - $ref: "#/components/parameters/UserAgentHeader"
+      requestBody:
+        description: The text and language of the request.
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RedactPiiRequest"
+          application/xml:
+            schema:
+              $ref: "#/components/schemas/RedactPiiRequest"
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: "#/components/schemas/RedactPiiRequest"
+        required: true
+      responses:
+        "200":
+          description: Successful Operation
+          content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/RedactPiiResponse"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RedactPiiResponse"
+        "400":
+          description: Bad Request
+          content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/BadRequestErrorResponse"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequestErrorResponse"
+        "401":
+          description: Unauthorized
+          content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/UnauthorizedErrorResponse"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnauthorizedErrorResponse"
+        "402":
+          description: Payment Required
+          content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/PaymentRequiredErrorResponse"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PaymentRequiredErrorResponse"
+        "500":
+          description: Internal Server Error
+          content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/InternalServerErrorResponse"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerErrorResponse"
+
+  /text/classify:
+    post:
+      tags:
+        - Media
+      summary: Classify text
+      description: This endpoint allows the caller to POST a body of text and list of possible classifications and it will return back the classification of the text.
+      operationId: textclassify
+      parameters:
+        - $ref: "#/components/parameters/AuthorizationHeader"
+        - $ref: "#/components/parameters/CorrelationHeader"
+        - $ref: "#/components/parameters/UserAgentHeader"
+      requestBody:
+        description: The text and classifications of the request.
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TextClassificationRequest"
+          application/xml:
+            schema:
+              $ref: "#/components/schemas/TextClassificationRequest"
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: "#/components/schemas/TextClassificationRequest"
+        required: true
+      responses:
+        "200":
+          description: Successful Operation
+          content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/TextClassificationResponse"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TextClassificationResponse"
+        "400":
+          description: Bad Request
+          content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/BadRequestErrorResponse"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequestErrorResponse"
+        "401":
+          description: Unauthorized
+          content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/UnauthorizedErrorResponse"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnauthorizedErrorResponse"
+        "402":
+          description: Payment Required
+          content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/PaymentRequiredErrorResponse"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PaymentRequiredErrorResponse"
+        "500":
+          description: Internal Server Error
+          content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/InternalServerErrorResponse"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerErrorResponse"
+
+  /text/classify/multiple:
+    post:
+      tags:
+        - Media
+      summary: Classify multiple text items
+      description: This endpoint allows the caller to POST a list of text items and list of possible classifications and it will return back the classification of each item in the text list.
+      operationId: textclassifymultiple
+      parameters:
+        - $ref: "#/components/parameters/AuthorizationHeader"
+        - $ref: "#/components/parameters/CorrelationHeader"
+        - $ref: "#/components/parameters/UserAgentHeader"
+      requestBody:
+        description: The list of text items and classifications of the request.
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TextClassificationMultipleRequest"
+          application/xml:
+            schema:
+              $ref: "#/components/schemas/TextClassificationMultipleRequest"
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: "#/components/schemas/TextClassificationMultipleRequest"
+        required: true
+      responses:
+        "200":
+          description: Successful Operation
+          content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/TextClassificationMultipleResponse"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TextClassificationMultipleResponse"
+        "400":
+          description: Bad Request
+          content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/BadRequestErrorResponse"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequestErrorResponse"
+        "401":
+          description: Unauthorized
+          content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/UnauthorizedErrorResponse"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnauthorizedErrorResponse"
+        "402":
+          description: Payment Required
+          content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/PaymentRequiredErrorResponse"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PaymentRequiredErrorResponse"
+        "500":
+          description: Internal Server Error
+          content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/InternalServerErrorResponse"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerErrorResponse"
+
+  /text/expenses:
+    post:
+      tags:
+        - Media
+      summary: Extract expenses from text
+      description: This endpoint allows the caller to POST a body of text containing expense data and an optional list of categories. The endpoint will return a list of items with their amounts and categories.
+      operationId: textexpenses
+      parameters:
+        - $ref: "#/components/parameters/AuthorizationHeader"
+        - $ref: "#/components/parameters/CorrelationHeader"
+        - $ref: "#/components/parameters/UserAgentHeader"
+      requestBody:
+        description: The text and optional classifications of the request.
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TextExpensesRequest"
+          application/xml:
+            schema:
+              $ref: "#/components/schemas/TextExpensesRequest"
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: "#/components/schemas/TextExpensesRequest"
+        required: true
+      responses:
+        "200":
+          description: Successful Operation
+          content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/TextExpensesResponse"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TextExpensesResponse"
+        "400":
+          description: Bad Request
+          content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/BadRequestErrorResponse"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequestErrorResponse"
+        "401":
+          description: Unauthorized
+          content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/UnauthorizedErrorResponse"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnauthorizedErrorResponse"
+        "402":
+          description: Payment Required
+          content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/PaymentRequiredErrorResponse"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PaymentRequiredErrorResponse"
+        "500":
+          description: Internal Server Error
+          content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/InternalServerErrorResponse"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerErrorResponse"
+
+  /text/todo:
+    post:
+      tags:
+        - Media
+      summary: Extract todo from text
+      description: This endpoint allows the caller to POST a body of text along with the user's current date, day, and time and the endpoint will extract a todo item and suggest a reminder date and time.
+      operationId: texttodo
+      parameters:
+        - $ref: "#/components/parameters/AuthorizationHeader"
+        - $ref: "#/components/parameters/CorrelationHeader"
+        - $ref: "#/components/parameters/UserAgentHeader"
+      requestBody:
+        description: The text and current date/time context of the request.
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TextTodoRequest"
+          application/xml:
+            schema:
+              $ref: "#/components/schemas/TextTodoRequest"
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: "#/components/schemas/TextTodoRequest"
+        required: true
+      responses:
+        "200":
+          description: Successful Operation
+          content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/TextTodoResponse"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TextTodoResponse"
+        "400":
+          description: Bad Request
+          content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/BadRequestErrorResponse"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequestErrorResponse"
+        "401":
+          description: Unauthorized
+          content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/UnauthorizedErrorResponse"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnauthorizedErrorResponse"
+        "402":
+          description: Payment Required
+          content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/PaymentRequiredErrorResponse"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PaymentRequiredErrorResponse"
+        "500":
+          description: Internal Server Error
+          content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/InternalServerErrorResponse"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerErrorResponse"
+
+  /text/sentiment/supportedlanguages:
+    get:
+      tags:
+        - Text
+      summary: Get the list of supported languages
+      description: Returns the list of supported languages for the sentiment endpoints.
+      operationId: sentimentsupported
+      parameters:
+        - $ref: "#/components/parameters/AuthorizationHeader"
+        - $ref: "#/components/parameters/CorrelationHeader"
+        - $ref: "#/components/parameters/UserAgentHeader"
+      responses:
+        "200":
+          description: Successful Operation
+          content:
+            application/xml:
+              schema:
+                description: The list of supported languages.
+                type: array
+                items:
+                  $ref: "#/components/schemas/SupportedLanguageResponse"
+            application/json:
+              schema:
+                description: The list of supported languages.
+                type: array
+                items:
+                  $ref: "#/components/schemas/SupportedLanguageResponse"
+        "400":
+          description: Bad Request
+          content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/BadRequestErrorResponse"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequestErrorResponse"
+        "401":
+          description: Unauthorized
+          content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/UnauthorizedErrorResponse"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnauthorizedErrorResponse"
+        "500":
+          description: Internal Server Error
+          content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/InternalServerErrorResponse"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerErrorResponse"
+
+  /text/sentiment:
+    post:
+      tags:
+        - Text
+      summary: Detect text sentiment
+      description: This endpoint allows the caller to POST a body of text and the source language and the endpoint will return the sentiment score of the text.
+      operationId: sentimentdetect
+      parameters:
+        - $ref: "#/components/parameters/AuthorizationHeader"
+        - $ref: "#/components/parameters/CorrelationHeader"
+        - $ref: "#/components/parameters/UserAgentHeader"
+      requestBody:
+        description: The text and language of the request.
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TextLanguageRequest"
+          application/xml:
+            schema:
+              $ref: "#/components/schemas/TextLanguageRequest"
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: "#/components/schemas/TextLanguageRequest"
+        required: true
+      responses:
+        "200":
+          description: Successful Operation
+          content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/TextSentimentResponse"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TextSentimentResponse"
+        "400":
+          description: Bad Request
+          content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/BadRequestErrorResponse"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequestErrorResponse"
+        "401":
+          description: Unauthorized
+          content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/UnauthorizedErrorResponse"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnauthorizedErrorResponse"
+        "402":
+          description: Payment Required
+          content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/PaymentRequiredErrorResponse"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PaymentRequiredErrorResponse"
+        "500":
+          description: Internal Server Error
+          content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/InternalServerErrorResponse"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerErrorResponse"
+
+  /text/summarize:
+    post:
+      tags:
+        - Text
+      summary: Summarize text
+      description: This endpoint allows the caller to POST a body of text and the endpoint will return a summary of the text.
+      operationId: summarizetext
+      parameters:
+        - $ref: "#/components/parameters/AuthorizationHeader"
+        - $ref: "#/components/parameters/CorrelationHeader"
+        - $ref: "#/components/parameters/UserAgentHeader"
+      requestBody:
+        description: The text to execute the request against.
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TextRequest"
+          application/xml:
+            schema:
+              $ref: "#/components/schemas/TextRequest"
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: "#/components/schemas/TextRequest"
+        required: true
+      responses:
+        "200":
+          description: Successful Operation
+          content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/SummarizeTextResponse"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SummarizeTextResponse"
+        "400":
+          description: Bad Request
+          content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/BadRequestErrorResponse"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequestErrorResponse"
+        "401":
+          description: Unauthorized
+          content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/UnauthorizedErrorResponse"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnauthorizedErrorResponse"
+        "402":
+          description: Payment Required
+          content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/PaymentRequiredErrorResponse"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PaymentRequiredErrorResponse"
+        "500":
+          description: Internal Server Error
+          content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/InternalServerErrorResponse"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerErrorResponse"
+
+  /scraper/markdown:
+    post:
+      tags:
+        - Web-Scraper
+      summary: Markdown web page
+      description: Extract and converts the contents of a web page to markdown.
+      operationId: markdownweb
+      parameters:
+        - $ref: "#/components/parameters/AuthorizationHeader"
+        - $ref: "#/components/parameters/CorrelationHeader"
+        - $ref: "#/components/parameters/UserAgentHeader"
+      requestBody:
+        description: The text to execute the request against.
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ScraperRequest"
+          application/xml:
+            schema:
+              $ref: "#/components/schemas/ScraperRequest"
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: "#/components/schemas/ScraperRequest"
+        required: true
+      responses:
+        "200":
+          description: Successful Operation
+          content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/ScraperMarkdownResponse"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ScraperMarkdownResponse"
+        "400":
+          description: Bad Request
+          content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/BadRequestErrorResponse"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequestErrorResponse"
+        "401":
+          description: Unauthorized
+          content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/UnauthorizedErrorResponse"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnauthorizedErrorResponse"
+        "402":
+          description: Payment Required
+          content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/PaymentRequiredErrorResponse"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PaymentRequiredErrorResponse"
+        "500":
+          description: Internal Server Error
+          content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/InternalServerErrorResponse"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerErrorResponse"
+
+  /scraper/summarize:
+    post:
+      tags:
+        - Web-Scraper
+      summary: Summarize web page
+      description: Extract and summarize the contents of a web page.
+      operationId: summarizeweb
+      parameters:
+        - $ref: "#/components/parameters/AuthorizationHeader"
+        - $ref: "#/components/parameters/CorrelationHeader"
+        - $ref: "#/components/parameters/UserAgentHeader"
+      requestBody:
+        description: The text to execute the request against.
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ScraperRequest"
+          application/xml:
+            schema:
+              $ref: "#/components/schemas/ScraperRequest"
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: "#/components/schemas/ScraperRequest"
+        required: true
+      responses:
+        "200":
+          description: Successful Operation
+          content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/ScraperSummarizeResponse"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ScraperSummarizeResponse"
+        "400":
+          description: Bad Request
+          content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/BadRequestErrorResponse"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequestErrorResponse"
+        "401":
+          description: Unauthorized
+          content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/UnauthorizedErrorResponse"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnauthorizedErrorResponse"
+        "402":
+          description: Payment Required
+          content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/PaymentRequiredErrorResponse"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PaymentRequiredErrorResponse"
+        "500":
+          description: Internal Server Error
+          content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/InternalServerErrorResponse"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerErrorResponse"
+
+  /speech/transcribe:
+    post:
+      tags:
+        - Media
+      summary: Transcribe audio
+      description: Transcribe the audio and return the text.
+      operationId: transcribeaudio
+      parameters:
+        - $ref: "#/components/parameters/AuthorizationHeader"
+        - $ref: "#/components/parameters/CorrelationHeader"
+        - $ref: "#/components/parameters/UserAgentHeader"
+      requestBody:
+        description: The audio file to transcribe.
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: "#/components/schemas/SpeechTranscribeRequest"
+        required: true
+      responses:
+        "200":
+          description: Successful Operation
+          content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/SpeechTranscribeResponse"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SpeechTranscribeResponse"
+        "400":
+          description: Bad Request
+          content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/BadRequestErrorResponse"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequestErrorResponse"
+        "401":
+          description: Unauthorized
+          content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/UnauthorizedErrorResponse"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnauthorizedErrorResponse"
+        "402":
+          description: Payment Required
+          content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/PaymentRequiredErrorResponse"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PaymentRequiredErrorResponse"
+        "500":
+          description: Internal Server Error
+          content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/InternalServerErrorResponse"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerErrorResponse"
+
+  /speech/todo:
+    post:
+      tags:
+        - Media
+      summary: Extract todo from audio
+      description: This endpoint allows the caller to POST an audio file along with the user's current date, day, and time as query parameters. The endpoint will transcribe the audio and extract a todo item with a suggested reminder date and time.
+      operationId: speechtodo
+      parameters:
+        - $ref: "#/components/parameters/AuthorizationHeader"
+        - $ref: "#/components/parameters/CorrelationHeader"
+        - $ref: "#/components/parameters/UserAgentHeader"
+        - name: user_date
+          in: query
+          required: false
+          schema:
+            type: string
+            example: "05/05/2026"
+          description: The user's current date in DD/MM/YYYY format.
+        - name: user_day
+          in: query
+          required: false
+          schema:
+            type: string
+            example: "Tuesday"
+          description: The user's current day of the week.
+        - name: user_time
+          in: query
+          required: false
+          schema:
+            type: string
+            example: "10:15 AM"
+          description: The user's current time.
+      requestBody:
+        description: The audio file to process.
+        content:
+          multipart/form-data:
+            schema:
+              $ref: "#/components/schemas/SpeechTranscribeRequest"
+        required: true
+      responses:
+        "200":
+          description: Successful Operation
+          content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/SpeechTodoResponse"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SpeechTodoResponse"
+        "400":
+          description: Bad Request
+          content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/BadRequestErrorResponse"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequestErrorResponse"
+        "401":
+          description: Unauthorized
+          content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/UnauthorizedErrorResponse"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnauthorizedErrorResponse"
+        "402":
+          description: Payment Required
+          content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/PaymentRequiredErrorResponse"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PaymentRequiredErrorResponse"
+        "500":
+          description: Internal Server Error
+          content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/InternalServerErrorResponse"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerErrorResponse"
+
+  /speech/calories:
+    post:
+      tags:
+        - Media
+      summary: Calorie count from audio
+      description: This endpoint allows the caller to POST an audio file containing food and drink items. The endpoint will transcribe the audio and return a list of items with their calorie and macro counts.
+      operationId: speechcalories
+      parameters:
+        - $ref: "#/components/parameters/AuthorizationHeader"
+        - $ref: "#/components/parameters/CorrelationHeader"
+        - $ref: "#/components/parameters/UserAgentHeader"
+      requestBody:
+        description: The audio file to process.
+        content:
+          multipart/form-data:
+            schema:
+              $ref: "#/components/schemas/SpeechTranscribeRequest"
+        required: true
+      responses:
+        "200":
+          description: Successful Operation
+          content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/SpeechCaloriesResponse"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SpeechCaloriesResponse"
+        "400":
+          description: Bad Request
+          content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/BadRequestErrorResponse"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequestErrorResponse"
+        "401":
+          description: Unauthorized
+          content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/UnauthorizedErrorResponse"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnauthorizedErrorResponse"
+        "402":
+          description: Payment Required
+          content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/PaymentRequiredErrorResponse"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PaymentRequiredErrorResponse"
+        "500":
+          description: Internal Server Error
+          content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/InternalServerErrorResponse"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerErrorResponse"
+
+  /speech/expenses:
+    post:
+      tags:
+        - Media
+      summary: Extract expenses from audio
+      description: This endpoint allows the caller to POST an audio file containing expense data and an optional comma-separated list of categories as a query parameter. The endpoint will transcribe the audio and return a list of items with their amounts and categories.
+      operationId: speechexpenses
+      parameters:
+        - $ref: "#/components/parameters/AuthorizationHeader"
+        - $ref: "#/components/parameters/CorrelationHeader"
+        - $ref: "#/components/parameters/UserAgentHeader"
+        - name: classifications
+          in: query
+          required: false
+          schema:
+            type: string
+            example: "Food & Dining,Transport,Shopping,Utilities,Entertainment,Health,Education,Other"
+          description: A comma-separated list of categories to classify each expense item into.
+      requestBody:
+        description: The audio file to process.
+        content:
+          multipart/form-data:
+            schema:
+              $ref: "#/components/schemas/SpeechTranscribeRequest"
+        required: true
+      responses:
+        "200":
+          description: Successful Operation
+          content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/SpeechExpensesResponse"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SpeechExpensesResponse"
+        "400":
+          description: Bad Request
+          content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/BadRequestErrorResponse"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequestErrorResponse"
+        "401":
+          description: Unauthorized
+          content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/UnauthorizedErrorResponse"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnauthorizedErrorResponse"
+        "402":
+          description: Payment Required
+          content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/PaymentRequiredErrorResponse"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PaymentRequiredErrorResponse"
+        "500":
+          description: Internal Server Error
+          content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/InternalServerErrorResponse"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerErrorResponse"
+
+  /client/balance:
+    get:
+      tags:
+        - System
+      summary: Get the client balance
+      description: Get the client balance
+      operationId: clientbalance
+      parameters:
+        - $ref: "#/components/parameters/AuthorizationHeader"
+      responses:
+        "200":
+          description: Successful Operation
+          content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/ClientBalanceResponse"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ClientBalanceResponse"
+        "400":
+          description: Bad Request
+          content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/BadRequestErrorResponse"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequestErrorResponse"
+        "401":
+          description: Unauthorized
+          content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/UnauthorizedErrorResponse"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnauthorizedErrorResponse"
+        "500":
+          description: Internal Server Error
+          content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/InternalServerErrorResponse"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerErrorResponse"
+
+components:
+  schemas:
+    SummarizeTextResponse:
+      type: object
+      properties:
+        costCalculation:
+          $ref: "#/components/schemas/TextCostCalculation"
+        summaryPoints:
+          description: The list of summary points.
+          type: array
+          items:
+            type: string
+          example: ["There was a quick fox.", "It jumped over the brown dog."]
+      required:
+        - costCalculation
+        - summaryPoints
+
+    TextSentimentResponse:
+      type: object
+      properties:
+        costCalculation:
+          $ref: "#/components/schemas/TextCostCalculation"
+        sentiment:
+          type: string
+          description: The overall sentiment of the text.
+          enum:
+            - POSITIVE
+            - NEGAITVE
+            - MIXED
+            - NEUTRAL
+        sentimentScore:
+          $ref: "#/components/schemas/SentimentScore"
+      required:
+        - costCalculation
+        - sentiment
+        - sentimentScore
+
+    SentimentScore:
+      type: object
+      properties:
+        mixed:
+          type: number
+          format: float
+          description: The mixed sentiment score.
+          example: 0.01
+        negative:
+          type: number
+          format: float
+          description: The negative sentiment score.
+          example: 0.02
+        neutral:
+          type: number
+          format: float
+          description: The neutral sentiment score.
+          example: 0.07
+        positive:
+          type: number
+          format: float
+          description: The positive sentiment score.
+          example: 0.90
+      required:
+        - mixed
+        - negative
+        - neutral
+        - positive
+
+    RedactPiiResponse:
+      type: object
+      properties:
+        costCalculation:
+          $ref: "#/components/schemas/TextCostCalculation"
+        text:
+          type: string
+          description: The text with the PII entities redacted.
+          example: "Hello, my name is [NAME] and I am a software developer."
+      required:
+        - costCalculation
+        - text
+
+    RedactPiiRequest:
+      type: object
+      properties:
+        text:
+          type: string
+          description: The body of text.
+          example: "Hello, my name is Johnathan Doe and I am a software developer."
+        language:
+          type: string
+          description: The source language code.
+          example: "en"
+        minimumScore:
+          type: number
+          format: float
+          description: The minimum score for which to redact the PII entities.
+          example: 0.75
+      required:
+        - text
+        - language
+
+    TextClassificationRequest:
+      type: object
+      properties:
+        text:
+          type: string
+          description: The text to classify.
+          example: "Eggs"
+        classifications:
+          type: array
+          example: ["Food", "Drink", "Other"]
+          items:
+            type: string
+      required:
+        - text
+        - classifications
+
+    TextClassificationMultipleRequest:
+      type: object
+      properties:
+        items:
+          type: array
+          description: The list of text items to classify.
+          example: ["Eggs", "Milk", "Bread"]
+          items:
+            type: string
+        classifications:
+          type: array
+          example: ["Food", "Drink", "Other"]
+          items:
+            type: string
+      required:
+        - items
+        - classifications
+
+    DetectPiiResponse:
+      type: object
+      properties:
+        costCalculation:
+          $ref: "#/components/schemas/TextCostCalculation"
+        entities:
+          type: array
+          items:
+            $ref: "#/components/schemas/DetectPiiEntity"
+          description: The PII entities detected in the text.
+      required:
+        - costCalculation
+        - entities
+
+    DetectPiiEntity:
+      type: object
+      properties:
+        beginOffset:
+          type: integer
+          description: The starting offset of the detected entity.
+          format: int64
+          example: 100
+        endOffset:
+          type: integer
+          description: The ending offset of the detected entity.
+          format: int64
+          example: 110
+        score:
+          type: number
+          format: float
+          description: The percentage of the text that is this language.
+          example: 0.99
+        type:
+          type: string
+          description: The type of entity detected.
+          example: "NAME"
+        text:
+          type: string
+          description: The text of entity detected.
+          example: "Johnathan Doe"
+      required:
+        - beginOffset
+        - endOffset
+        - score
+        - type
+        - text
+
+    TextLanguageRequest:
+      type: object
+      properties:
+        text:
+          type: string
+          description: The body of text.
+          example: "Hello, my name is Johnathan Doe and I am a software developer."
+        language:
+          type: string
+          description: The source language code.
+          example: "en"
+      required:
+        - text
+        - language
+
+    TranslateResponse:
+      type: object
+      properties:
+        costCalculation:
+          $ref: "#/components/schemas/TextCostCalculation"
+        text:
+          type: string
+          description: The translated text.
+          example: "Le rapide renard brun saute par-dessus le chien paresseux."
+        sourceLanguage:
+          type: string
+          description: The source language code.
+          example: "en"
+        targetLanguage:
+          type: string
+          description: The target language code.
+          example: "fr"
+      required:
+        - costCalculation
+        - text
+        - sourceLanguage
+        - targetLanguage
+
+    TranslateRequest:
+      type: object
+      properties:
+        text:
+          type: string
+          description: The body of text.
+          example: "The quick brown fox jumps over the lazy dog."
+        sourceLanguage:
+          type: string
+          description: The source language code, use `auto` if the source is unknown.
+          example: "auto"
+        targetLanguage:
+          type: string
+          description: The target language code.
+          example: "fr"
+      required:
+        - text
+        - sourceLanguage
+        - targetLanguage
+
+    LanguageDetectResponse:
+      type: object
+      properties:
+        costCalculation:
+          $ref: "#/components/schemas/TextCostCalculation"
+        languages:
+          description: The list of languages detected in the body of text.
+          type: array
+          items:
+            $ref: "#/components/schemas/LanguageDetectItem"
+      required:
+        - costCalculation
+        - languages
+
+    LanguageDetectItem:
+      type: object
+      properties:
+        languageCode:
+          type: string
+          description: The language code.
+          example: en
+        language:
+          type: string
+          description: The language name.
+          example: English
+        score:
+          type: number
+          format: float
+          description: The percentage of the text that is this language.
+          example: 0.99
+      required:
+        - languageCode
+        - language
+        - score
+
+    TextRequest:
+      type: object
+      properties:
+        text:
+          type: string
+          description: The body of text.
+          example: "The quick brown fox jumps over the lazy dog."
+      required:
+        - text
+
+    CalorieTextRequest:
+      type: object
+      properties:
+        text:
+          type: string
+          description: The body of text.
+          example: "Bacon and eggs and a cup of coffee."
+      required:
+        - text
+
+    SpeechTranscribeResponse:
+      type: object
+      properties:
+        costCalculation:
+          $ref: "#/components/schemas/DocumentCostCalculation"
+        speech:
+          type: string
+          description: The transcribed text from the audio file.
+          example: "Welcome to Intelligent API, your go-to solution for AI-powered endpoints."
+      required:
+        - costCalculation
+        - speech
+
+    SpeechExpensesResponse:
+      type: object
+      properties:
+        costCalculations:
+          description: A list of the cost calculations involved in completing the request.
+          type: array
+          items:
+            $ref: "#/components/schemas/TextCostCalculation"
+        items:
+          type: array
+          description: The list of expense items extracted from the audio.
+          items:
+            $ref: "#/components/schemas/TextExpenseItem"
+        speech:
+          type: string
+          description: The transcribed text from the audio file.
+          example: "59.99 for Bananas."
+      required:
+        - costCalculations
+        - items
+        - speech
+
+    SpeechCaloriesResponse:
+      type: object
+      properties:
+        costCalculations:
+          description: A list of the cost calculations involved in completing the request.
+          type: array
+          items:
+            $ref: "#/components/schemas/TextCostCalculation"
+        calorieCounterResult:
+          $ref: "#/components/schemas/CalorieCounterResult"
+        speech:
+          type: string
+          description: The transcribed text from the audio file.
+          example: "Pineapple chunks"
+      required:
+        - costCalculations
+        - calorieCounterResult
+        - speech
+
+    SpeechTodoResponse:
+      type: object
+      properties:
+        costCalculations:
+          description: A list of the cost calculations involved in completing the request.
+          type: array
+          items:
+            $ref: "#/components/schemas/TextCostCalculation"
+        todo:
+          $ref: "#/components/schemas/TextTodoItem"
+        speech:
+          type: string
+          description: The transcribed text from the audio file.
+          example: "Pick up the car tomorrow evening."
+      required:
+        - costCalculations
+        - todo
+        - speech
+
+    SpeechTranscribeRequest:
+      type: object
+      properties:
+        file:
+          type: string
+          format: binary
+          description: The audio file to transcribe. Supported formats include OGG, MP3, WAV, FLAC, and M4A.
+      required:
+        - file
+
+    ScraperRequest:
+      type: object
+      properties:
+        url:
+          type: string
+          description: The url of the webpage.
+          example: "https://fullcycle.tech"
+        proxy:
+          type: string
+          description: If required, the complete uri of the server to proxy the request through.
+          example: "http://brd-customer-xxx-zone-xxx:xxx@brd.superproxy.io:xxx"
+      required:
+        - url
+
+    ScraperMarkdownResponse:
+      type: object
+      properties:
+        costCalculation:
+          $ref: "#/components/schemas/TextCostCalculation"
+        markdown:
+          description: The markdown of the web page.
+          type: string
+          example: "Title: Home | Full Cycle Tech\n\nURL Source: https://fullcycle.tech/\n\nMarkdown Content: # This is a heading\n\nThis is text"
+      required:
+        - costCalculation
+        - summaryPoints
+
+    ScraperSummarizeResponse:
+      type: object
+      properties:
+        costCalculations:
+          description: A list of the cost calculations involved in completing the request.
+          type: array
+          items:
+            $ref: "#/components/schemas/DocumentCostCalculation"
+        summaryPoints:
+          type: array
+          description: A list of summary points extracted from the web page.
+          items:
+            type: string
+            example:
+              [
+                "John doe is wrote this article.",
+                "The article discusses the topic of climate change.",
+              ]
+      required:
+        - costCalculations
+        - summaryPoints
+
+    SupportedLanguageResponse:
+      type: object
+      properties:
+        code:
+          type: string
+          description: The language code.
+          example: en
+        language:
+          type: string
+          description: The language name.
+          example: English
+      required:
+        - code
+        - language
+
+    ExtractTextSummarizeResponse:
+      type: object
+      properties:
+        costCalculations:
+          description: A list of the cost calculations involved in completing the request.
+          type: array
+          items:
+            $ref: "#/components/schemas/DocumentCostCalculation"
+        summaryPoints:
+          type: array
+          description: A list of summary points extracted from the text.
+          items:
+            type: string
+            example:
+              [
+                "John doe is wrote this document.",
+                "The document discusses the topic of climate change.",
+              ]
+      required:
+        - costCalculations
+        - summaryPoints
+
+    ExtractIdentityResponse:
+      type: object
+      properties:
+        costCalculation:
+          $ref: "#/components/schemas/DocumentCostCalculation"
+        identityEntities:
+          type: array
+          description: The list of fields extracted
+          items:
+            $ref: "#/components/schemas/IdentityEntity"
+      required:
+        - costCalculation
+        - identityEntities
+
+    IdentityEntity:
+      type: object
+      properties:
+        fieldName:
+          type: string
+          description: "Name of the identity field."
+          enum:
+            - FIRST_NAME
+            - LAST_NAME
+        fieldValue:
+          type: string
+          description: "Value of the identity field."
+          example: "JOHN"
+        normalizedValue:
+          type: object
+          properties:
+            value:
+              type: string
+              description: "Normalized value of the field."
+            valueType:
+              type: string
+              description: "Type of the normalized value."
+      required:
+        - fieldName
+        - fieldValue
+
+    ExtractTextResponse:
+      type: object
+      properties:
+        costCalculation:
+          $ref: "#/components/schemas/DocumentCostCalculation"
+        detectedText:
+          type: string
+          description: All of the detected text.
+          example: "This was the first line in the document.\nThis was the second line."
+        detectedLines:
+          type: array
+          description: An array of each line of detected text.
+          items:
+            type: string
+            example:
+              [
+                "This was the first line in the document.",
+                "This was the second line.",
+              ]
+      required:
+        - costCalculation
+        - detectedText
+        - detectedLines
+
+    DocumentCostCalculation:
+      description: The cost calculation for the endpoint invocation
+      type: object
+      properties:
+        operation:
+          type: string
+          description: The name of the scope that was used for this cost calculation.
+          enum:
+            - document.expense
+            - document.text
+            - document.identity
+            - image.calories
+            - image.list
+            - language.detect
+            - language.translate
+            - pii.detect
+            - pii.redact
+            - scraper.markdown
+            - speech.transcribe
+            - text.calories
+            - text.classify
+            - text.expenses
+            - text.sentiment
+            - text.summarize
+            - text.todos
+        charactersIn:
+          type: integer
+          description: The total number of characters that were detected by the cost calculation.
+          format: int64
+        charactersOut:
+          type: integer
+          description: The total number of characters that were sent out if used in the cost calculation.
+          format: int64
+        totalCharacters:
+          type: integer
+          description: The total number of characters that were detected.
+          format: int64
+        charactersPerPage:
+          type: integer
+          description: The number of characters which are characterized as one page for this operation.
+          format: int64
+        pages:
+          type: integer
+          description: The number of pages that were detected.
+          format: int64
+          example: 1
+        pageCost:
+          type: integer
+          description: The cost per page of the operation.
+          format: int64
+          example: 3
+        totalCost:
+          type: integer
+          description: The total cost of the operation.
+          format: int64
+          example: 3
+      required:
+        - operation
+        - totalCost
+
+    TextTodoRequest:
+      type: object
+      properties:
+        text:
+          type: string
+          description: The body of text containing the todo item.
+          example: "Pick up the car tomorrow evening"
+        usersDate:
+          type: string
+          description: The user's current date in DD/MM/YYYY format.
+          example: "05/05/2026"
+        usersDay:
+          type: string
+          description: The user's current day of the week.
+          example: "Tuesday"
+        usersTime:
+          type: string
+          description: The user's current time.
+          example: "4:13 PM"
+      required:
+        - text
+
+    TextTodoItem:
+      type: object
+      properties:
+        todo:
+          type: string
+          description: The extracted todo item.
+          example: "Pick up the car"
+        reminderDate:
+          type: string
+          description: The suggested reminder date in DD/MM/YYYY format.
+          example: "06/05/2026"
+        reminderTime:
+          type: string
+          description: The suggested reminder time in HH:MM format.
+          example: "18:00"
+      required:
+        - todo
+        - reminderDate
+        - reminderTime
+
+    TextTodoResponse:
+      type: object
+      properties:
+        costCalculation:
+          $ref: "#/components/schemas/TextCostCalculation"
+        todo:
+          $ref: "#/components/schemas/TextTodoItem"
+      required:
+        - costCalculation
+        - todo
+
+    TextExpensesRequest:
+      type: object
+      properties:
+        text:
+          type: string
+          description: The body of text containing expense data.
+          example: "59.99 for bananas"
+        classifications:
+          type: array
+          description: The list of categories to classify each expense item into.
+          example:
+            - "Food & Dining"
+            - "Transport"
+            - "Shopping"
+            - "Utilities"
+            - "Entertainment"
+            - "Health"
+            - "Education"
+            - "Other"
+          items:
+            type: string
+      required:
+        - text
+
+    TextExpenseItem:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The name of the expense item.
+          example: "bananas"
+        amount:
+          type: string
+          description: The monetary amount of the expense item.
+          example: "59.99"
+        category:
+          type: string
+          description: The category the expense item was classified into.
+          example: "Food & Dining"
+      required:
+        - name
+        - amount
+        - category
+
+    TextExpensesResponse:
+      type: object
+      properties:
+        costCalculation:
+          $ref: "#/components/schemas/TextCostCalculation"
+        items:
+          type: array
+          description: The list of expense items extracted from the text.
+          items:
+            $ref: "#/components/schemas/TextExpenseItem"
+      required:
+        - costCalculation
+        - items
+
+    TextCostCalculation:
+      description: The cost calculation for the endpoint invocation
+      type: object
+      properties:
+        operation:
+          type: string
+          enum:
+            - document.text
+            - document.expense
+            - document.identity
+            - image.calories
+            - image.list
+            - language.detect
+            - language.translate
+            - pii.detect
+            - pii.redact
+            - scraper.markdown
+            - speech.transcribe
+            - text.calories
+            - text.classify
+            - text.expenses
+            - text.sentiment
+            - text.summarize
+            - text.todos
+        charactersIn:
+          type: integer
+          description: The total number of characters that were detected by the cost calculation.
+          format: int64
+          example: 100
+        charactersOut:
+          type: integer
+          description: The total number of characters that were sent out if used in the cost calculation.
+          format: int64
+          example: 100
+        totalCharacters:
+          type: integer
+          description: The total number of characters that were detected.
+          format: int64
+          example: 200
+        charactersPerPage:
+          type: integer
+          description: The number of characters which are characterized as one page for this operation.
+          format: int64
+          example: 1000
+        pages:
+          type: integer
+          description: The number of pages that were detected.
+          format: int64
+          example: 1
+        pageCost:
+          type: integer
+          description: The cost per page of the operation.
+          format: int64
+          example: 3
+        totalCost:
+          type: integer
+          description: The total cost of the operation.
+          format: int64
+          example: 3
+      required:
+        - operation
+        - totalCost
+
+    ReceiptSummary:
+      type: object
+      properties:
+        invoiceReceiptDate:
+          type: string
+          format: date
+          example: "6/11/2024"
+        invoiceReceiptId:
+          type: string
+          example: "#6826"
+        customerNumber:
+          type: string
+        invoiceTaxPayerId:
+          type: string
+          example: "4270124169"
+        accountNumber:
+          type: string
+        vendorName:
+          type: string
+          example: "Grocery Store"
+        receiverName:
+          type: string
+        vendorAddress:
+          type: string
+          example: "1 Shopping Street, Shoppville"
+        receiverAddress:
+          type: string
+        orderDate:
+          type: string
+        dueDate:
+          type: string
+        deliveryDate:
+          type: string
+        poNumber:
+          type: string
+        paymentTerms:
+          type: string
+        total:
+          type: string
+          example: "49.99"
+        amountDue:
+          type: string
+        amountPaid:
+          type: string
+          example: "49.99"
+        subtotal:
+          type: string
+        tax:
+          type: string
+          example: "14.20"
+        serviceCharge:
+          type: string
+        gratuity:
+          type: string
+        priorBalance:
+          type: string
+        discount:
+          type: string
+        shippingCharge:
+          type: string
+        vendorABNNumber:
+          type: string
+        vendorGSTNumber:
+          type: string
+        vendorPANNumber:
+          type: string
+        vendorVATNumber:
+          type: string
+        receiverABNNumber:
+          type: string
+        receiverGSTNumber:
+          type: string
+        receiverPANNumber:
+          type: string
+        receiverVATNumber:
+          type: string
+        vendorPhone:
+          type: string
+          example: "0860 555 555"
+        receiverPhone:
+          type: string
+        vendorURL:
+          type: string
+        itemDescription:
+          type: string
+        quantity:
+          type: string
+        totalPrice:
+          type: string
+        unitPrice:
+          type: string
+        productCode:
+          type: string
+        address:
+          type: string
+          example: "1 Shopping Street, Shoppville"
+        name:
+          type: string
+          example: "Grocery Store"
+        coreAddress:
+          type: string
+          example: "1 Shopping Street, Shoppville"
+        streetAddress:
+          type: string
+          example: "1 Shopping Street"
+        city:
+          type: string
+          example: "Shoppville"
+        state:
+          type: string
+        country:
+          type: string
+        zipCode:
+          type: string
+
+    ReceiptItem:
+      type: object
+      properties:
+        item:
+          type: string
+          example: "Nappies"
+        price:
+          type: string
+          example: "49.99"
+        expenseRow:
+          type: string
+          example: "555\nNappies\n1 NET @ 49.99 49.99"
+        quantity:
+          type: string
+          example: "1"
+        other:
+          type: string
+        unitPrice:
+          type: string
+
+    Receipt:
+      type: object
+      properties:
+        summary:
+          $ref: "#/components/schemas/ReceiptSummary"
+        items:
+          description: The list of items extracted from the receipt
+          type: array
+          items:
+            $ref: "#/components/schemas/ReceiptItem"
+      required:
+        - summary
+        - items
+
+    ExtractExpenseResponse:
+      type: object
+      properties:
+        costCalculation:
+          $ref: "#/components/schemas/DocumentCostCalculation"
+        receipts:
+          description: The list of receipts extracted from the document.
+          type: array
+          items:
+            $ref: "#/components/schemas/Receipt"
+      required:
+        - costCalculation
+        - receipts
+
+    ClientBalanceResponse:
+      type: object
+      properties:
+        availableCredits:
+          description: The total number of available credits.
+          type: integer
+          format: int64
+          example: 500
+        lowThresholdWarning:
+          description: The current setting of the Low Balance Threshold warning, to change this please see [Updating Low Balance Threshold](/docs/account#updating-low-balance-threshold)
+          type: integer
+          format: int64
+          example: 100
+        updatedAt:
+          type: string
+          description: The datestamp when the balance was last updated.
+          format: date
+          example: 2025-01-15T09:44:44.143464+02:00
+      required:
+        - availableCredits
+        - lowThresholdWarning
+        - updatedAt
+
+    ScopesResponse:
+      type: object
+      properties:
+        scopes:
+          description: The space separated list of scopes.
+          type: string
+          example: client.balance document.expense document.text document.identity language.detect language.translate pii.detect pii.redact scraper.markdown text.sentiment text.summarize speech.transcribe image.list image.calories text.calories text.classify text.expenses text.todos
+      required:
+        - scopes
+
+    HeaderSource:
+      type: object
+      properties:
+        header:
+          description: The name of the affected header.
+          type: string
+          example: Authorization
+      required:
+        - header
+
+    PointerSource:
+      type: object
+      properties:
+        pointer:
+          description: A pointer to what the source of the error could possibly be.
+          type: string
+          example: /data
+      required:
+        - pointer
+
+    InternalServerLinksResponse:
+      type: object
+      properties:
+        about:
+          description: A uri with information about how to resolve the error.
+          type: string
+          format: uri
+          example: https://docs.intelliegent-api.com/api
+        type:
+          description: A uri with information about the type of error.
+          type: string
+          format: uri
+          example: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/500
+      required:
+        - about
+        - type
+
+    InternalServerErrorResponse:
+      type: object
+      properties:
+        id:
+          description: Unique identifier for the error.
+          type: string
+          format: uuid
+          example: eef1ccb0-444f-4c71-a87d-08484e4749c3
+        links:
+          $ref: "#/components/schemas/InternalServerLinksResponse"
+        title:
+          description: The title of the error.
+          type: string
+          example: InternalServerError
+        detail:
+          description: The details of the error.
+          type: string
+          example: An error occurred while processing your request, please try again.
+        status:
+          description: The status code of the error.
+          type: integer
+          format: int64
+          example: 500
+        code:
+          description: The string representation of the status code of the error.
+          type: string
+          example: InternalServerError
+        source:
+          description: A pointer to the where the source of the error could possibly be.
+          oneOf:
+            - $ref: "#/components/schemas/HeaderSource"
+            - $ref: "#/components/schemas/PointerSource"
+      required:
+        - id
+        - links
+        - title
+        - detail
+        - status
+        - code
+        - source
+
+    BadRequestLinksResponse:
+      type: object
+      properties:
+        about:
+          description: A uri with information about how to resolve the error.
+          type: string
+          format: uri
+          example: https://docs.intelliegent-api.com/api
+        type:
+          description: A uri with information about the type of error.
+          type: string
+          format: uri
+          example: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/400
+      required:
+        - about
+        - type
+
+    BadRequestErrorResponse:
+      type: object
+      properties:
+        id:
+          description: Unique identifier for the error.
+          type: string
+          format: uuid
+          example: eef1ccb0-444f-4c71-a87d-08484e4749c3
+        links:
+          $ref: "#/components/schemas/BadRequestLinksResponse"
+        title:
+          description: The title of the error.
+          type: string
+          example: BadRequest
+        detail:
+          description: The details of the error.
+          type: string
+          example: An error occurred while processing your request, please try again.
+        status:
+          description: The status code of the error.
+          type: integer
+          format: int64
+          example: 400
+        code:
+          description: The string representation of the status code of the error.
+          type: string
+          example: BadRequest
+        source:
+          description: A pointer to the where the source of the error could possibly be.
+          oneOf:
+            - $ref: "#/components/schemas/HeaderSource"
+            - $ref: "#/components/schemas/PointerSource"
+      required:
+        - id
+        - links
+        - title
+        - detail
+        - status
+        - code
+        - source
+
+    UnauthorizedLinksResponse:
+      type: object
+      properties:
+        about:
+          description: A uri with information about how to resolve the error.
+          type: string
+          format: uri
+          example: https://docs.intelligent-api.com/docs/oauth-authentication
+        type:
+          description: A uri with information about the type of error.
+          type: string
+          format: uri
+          example: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/401
+      required:
+        - about
+        - type
+
+    UnauthorizedErrorResponse:
+      type: object
+      properties:
+        id:
+          description: Unique identifier for the error.
+          type: string
+          format: uuid
+          example: eef1ccb0-444f-4c71-a87d-08484e4749c3
+        links:
+          $ref: "#/components/schemas/UnauthorizedLinksResponse"
+        title:
+          description: The title of the error.
+          type: string
+          example: Unauthorized
+        detail:
+          description: The details of the error.
+          type: string
+          example: Caller is not authorized to perform the requested action.
+        status:
+          description: The status code of the error.
+          type: integer
+          format: int64
+          example: 401
+        code:
+          description: The string representation of the status code of the error.
+          type: string
+          example: Unauthorized
+        source:
+          description: A pointer to the where the source of the error could possibly be.
+          oneOf:
+            - $ref: "#/components/schemas/HeaderSource"
+            - $ref: "#/components/schemas/PointerSource"
+      required:
+        - id
+        - links
+        - title
+        - detail
+        - status
+        - code
+        - source
+
+    PaymentRequiredLinksResponse:
+      type: object
+      properties:
+        about:
+          description: A uri with information about how to resolve the error.
+          type: string
+          format: uri
+          example: https://docs.intelligent-api.com/docs/payments
+        type:
+          description: A uri with information about the type of error.
+          type: string
+          format: uri
+          example: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/402
+      required:
+        - about
+        - type
+
+    PaymentRequiredErrorResponse:
+      type: object
+      properties:
+        id:
+          description: Unique identifier for the error.
+          type: string
+          format: uuid
+          example: eef1ccb0-444f-4c71-a87d-08484e4749c3
+        links:
+          $ref: "#/components/schemas/PaymentRequiredLinksResponse"
+        title:
+          description: The title of the error.
+          type: string
+          example: PaymentRequired
+        detail:
+          description: The details of the error.
+          type: string
+          example: Insufficient balance to perform operation.
+        status:
+          description: The status code of the error.
+          type: integer
+          format: int64
+          example: 402
+        code:
+          description: The string representation of the status code of the error.
+          type: string
+          example: PaymentRequired
+        source:
+          description: A pointer to the where the source of the error could possibly be.
+          oneOf:
+            - $ref: "#/components/schemas/HeaderSource"
+            - $ref: "#/components/schemas/PointerSource"
+      required:
+        - id
+        - links
+        - title
+        - detail
+        - status
+        - code
+        - source
+
+    FileUpload:
+      description: File upload binary data
+      type: object
+      properties:
+        binaryData:
+          description: This must be the binary data of the file, for examples on how to post this data to the endpoint please see the [Code Examples](https://github.com/intelligent-api/examples/) or try it out in the [Playground](/docs/playground).
+          type: string
+          format: binary
+      required:
+        - binaryData
+
+    ImageListResponse:
+      type: object
+      properties:
+        costCalculation:
+          $ref: "#/components/schemas/TextCostCalculation"
+        items:
+          description: The list of items detected in the image.
+          type: array
+          items:
+            type: string
+          example: ["apple", "banana", "orange"]
+      required:
+        - costCalculation
+        - items
+
+    CalorieCounterItem:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The name of the food item.
+          example: "Pineapple chunks"
+        quantity:
+          type: string
+          description: The quantity of the food item.
+          example: "8"
+        weight:
+          type: string
+          description: The weight of the food item.
+          example: "120g"
+        calories:
+          type: integer
+          description: The number of calories in the food item.
+          format: int64
+          example: 66
+        protein:
+          type: string
+          description: The amount of protein in the food item.
+          example: "0.5g"
+        carbohydrates:
+          type: string
+          description: The amount of carbohydrates in the food item.
+          example: "17.5g"
+        fat:
+          type: string
+          description: The amount of fat in the food item.
+          example: "0.1g"
+      required:
+        - name
+        - quantity
+        - weight
+        - calories
+        - protein
+        - carbohydrates
+        - fat
+
+    TextClassificationMultipleResult:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The text of the item.
+        classification:
+          type: string
+          description: The classification of the text.
+      required:
+        - name
+        - classification
+
+    CalorieCounterResult:
+      type: object
+      properties:
+        items:
+          type: array
+          description: The list of food items detected in the image.
+          items:
+            $ref: "#/components/schemas/CalorieCounterItem"
+        total_calories:
+          type: integer
+          description: The total number of calories across all food items.
+          format: int64
+          example: 267
+        total_protein:
+          type: string
+          description: The total amount of protein across all food items.
+          example: "2.4g"
+        total_carbohydrates:
+          type: string
+          description: The total amount of carbohydrates across all food items.
+          example: "70.3g"
+        total_fat:
+          type: string
+          description: The total amount of fat across all food items.
+          example: "1.0g"
+      required:
+        - items
+        - total_calories
+        - total_protein
+        - total_carbohydrates
+        - total_fat
+
+    CalorieCounterResponse:
+      type: object
+      properties:
+        costCalculation:
+          $ref: "#/components/schemas/DocumentCostCalculation"
+        calorieCounterResult:
+          $ref: "#/components/schemas/CalorieCounterResult"
+      required:
+        - costCalculation
+        - calorieCounterResult
+
+    TextClassificationMultipleResponse:
+      type: object
+      properties:
+        costCalculation:
+          $ref: "#/components/schemas/TextCostCalculation"
+        items:
+          type: array
+          description: The list of items and their classifications.
+          items:
+            $ref: "#/components/schemas/TextClassificationMultipleResult"
+      required:
+        - costCalculation
+        - classification
+
+    TextClassificationResponse:
+      type: object
+      properties:
+        costCalculation:
+          $ref: "#/components/schemas/TextCostCalculation"
+        classification:
+          type: string
+          description: The classification of the item.
+      required:
+        - costCalculation
+        - classification
+
+    TokenRequest:
+      type: object
+      properties:
+        client_id:
+          description: The client_id generated from the dashboard.
+          type: string
+          example: 1a6bff6f9cf34975813590831c
+        client_secret:
+          description: The client_secret generated from the dashboard.
+          type: string
+          example: 1a6bff6f9cf34975813590831c1a6bff6f9cf34975813590831c
+        grant_type:
+          description: The grant type which will always be client_credentials.
+          type: string
+          default: client_credentials
+        scope:
+          description: The list of scopes the token should be generated for separated by a space.
+          type: string
+          example: client.balance document.expense document.text document.identity language.detect language.translate pii.detect pii.redact scraper.markdown text.sentiment text.summarize speech.transcribe image.list image.calories text.calories text.classify text.expenses text.todos
+      required:
+        - client_id
+        - client_secret
+        - grant_type
+        - scope
+
+    TokenResponse:
+      type: object
+      properties:
+        access_token:
+          description: The access_token to be used as the Bearer token when making subsequent API requests.
+          type: string
+          example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
+        token_type:
+          description: The type of token that was generated.
+          type: string
+          default: bearer
+        expires_in:
+          description: The amount of time in seconds in which the token expires.
+          type: integer
+          format: int64
+          default: 14400
+        scope:
+          description: The list of scopes the token is valid for separated by a space.
+          type: string
+          example: client.balance document.expense document.text document.identity language.detect language.translate pii.detect pii.redact scraper.markdown text.sentiment text.summarize speech.transcribe image.list image.calories text.calories text.classify text.expenses text.todos
+      required:
+        - access_token
+        - token_type
+        - expires_in
+        - scope
+
+  parameters:
+    AuthorizationHeader:
+      name: Authorization
+      in: header
+      schema:
+        type: string
+      required: true
+      description: Either <ins>[Oauth Authentication](/docs/oauth-authentication)</ins> using a `Bearer` token or <ins>[Basic Authentication](/docs/basic-authentication)</ins> using a `Basic` api key.
+
+    CorrelationHeader:
+      name: X-Correlation-Id
+      in: header
+      schema:
+        type: string
+        format: uuid
+        example: dfe8e127-14aa-42e5-8397-118ebd4594b3
+      required: false
+      description: If you would like to correlate any API requests made with any errors that may be returned, pass in this header and the system will log the id with all requests internally.
+
+    UserAgentHeader:
+      name: User-Agent
+      in: header
+      schema:
+        type: string
+        example: Intelligent API cURL Integration
+      required: false
+      description: You can pass in the User Agent for any custom integration you build to identify the caller, for example if you are integrating your own different APIs you can set the user agent to identify which calls originate from which API.
